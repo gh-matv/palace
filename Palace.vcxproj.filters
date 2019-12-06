@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Fichiers de ressources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="src\utils">
+      <UniqueIdentifier>{38c8e966-05d4-42e9-895b-c39ef73d5a0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\3rdparty">
+      <UniqueIdentifier>{e56df6a7-2cd5-4599-bc3b-8b002186d934}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\3rdparty\lz4">
+      <UniqueIdentifier>{e1c891b3-8ce0-456d-b106-e0fe171b9aa7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\utils\ByteStreams">
+      <UniqueIdentifier>{040156be-6116-4d16-8ab0-cf97ff06b00c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\utils\Compression">
+      <UniqueIdentifier>{773d7114-4bb2-4659-bdf5-676f32c69301}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\utils\FileSystem">
+      <UniqueIdentifier>{e7149a6c-7f51-4246-943d-02a121678f68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\utils\Obfuscation">
+      <UniqueIdentifier>{5eaa20b5-9481-4661-b45b-6102b718299d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\utils\Image">
+      <UniqueIdentifier>{2cbf0bca-2e80-46b9-91d5-254ccd3ef581}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="lz4.h">
+      <Filter>src\3rdparty\lz4</Filter>
+    </ClInclude>
+    <ClInclude Include="ByteStream.h">
+      <Filter>src\utils\ByteStreams</Filter>
+    </ClInclude>
+    <ClInclude Include="CompressableByteStream.h">
+      <Filter>src\utils\ByteStreams</Filter>
+    </ClInclude>
+    <ClInclude Include="Compressor.h">
+      <Filter>src\utils\Compression</Filter>
+    </ClInclude>
+    <ClInclude Include="FileCompressor.h">
+      <Filter>src\utils\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="code_checkers.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Chrono.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Obfuscator.h">
+      <Filter>src\utils\Obfuscation</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageSearch.h">
+      <Filter>src\utils\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="Console.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="lz4.cpp">
+      <Filter>src\3rdparty\lz4</Filter>
+    </ClCompile>
+    <ClCompile Include="ByteStreamExplainer.h">
+      <Filter>src\utils\ByteStreams</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+  </ItemGroup>
+</Project>
