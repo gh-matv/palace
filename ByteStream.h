@@ -8,10 +8,34 @@
 #include <exception>
 #include <iostream>
 
+typedef uint16_t stringlen_t;
 
 namespace palace
 {
-	template <typename stringlen_t = uint16_t>
+	class ByteStream;
+
+	template<typename T>
+	class ByteStreamPtr {
+	public:
+
+		ByteStream* bs;
+		size_t offset;
+
+		ByteStreamPtr(ByteStream* bs, size_t offs) : bs(bs), offset(offs) {}
+
+		ByteStream* jumpHere()
+		{
+			bs->seekg(offset);
+			return bs;
+		}
+
+		T value()
+		{
+			return *bs->raw_at<T>(offset);
+		}
+
+	};
+
 	class ByteStream
 	{
 	protected:
@@ -29,18 +53,11 @@ namespace palace
 			pCurPtr = 0;
 		}
 
-		ByteStream(size_t size, void* buffer_to_copy)
+		ByteStream(size_t size, void* buffer_to_copy) : ByteStream(size)
 		{
-			pBuffer = new std::vector<uint8_t>(size);
-			pCurPtr = 0;
-
 			memcpy(pBuffer->data(), buffer_to_copy, size);
 		}
 
-		~ByteStream()
-		{
-			delete pBuffer;
-		}
 
 		ByteStream(std::istream& is, bool fromBeg = false)
 		{
@@ -56,6 +73,11 @@ namespace palace
 			is.seekg(oldStreamPos);
 
 			is.read((char*)pBuffer->data(), end - oldStreamPos);
+		}
+
+		~ByteStream()
+		{
+			delete pBuffer;
 		}
 
 		bool resize(size_t newSize)
@@ -74,14 +96,14 @@ namespace palace
 		}
 
 		template<typename T>
-		bool _chk_size_for_simple()
+		bool _chk_size_for_type()
 		{
 			return _chk_size(sizeof(T));
 		}
 
-		bool _chk_size_for_string(size_t size)
+		bool _chk_size_for_string(size_t stringlen)
 		{
-			return _chk_size(sizeof(stringlen_t) + size);
+			return _chk_size(sizeof(stringlen_t) + stringlen);
 		}
 
 		void _makespace(size_t additionalSize)
@@ -151,7 +173,7 @@ namespace palace
 		template <typename T>
 		void write(const T in)
 		{
-			if (!_chk_size_for_simple<T>())
+			if (!_chk_size_for_type<T>())
 				_makespace_for_simple<T>();
 
 			_unsafe_write_here<T>(in);
@@ -161,7 +183,8 @@ namespace palace
 		// For strings, write the length as stringlen_t before the string.
 		//  some bytes lost in memory, but no need to loop over every char to find
 		//  the incoming \0 at the end.
-		void write(std::string input)
+		template<>
+		void write<std::string>(const std::string input)
 		{
 			stringlen_t strSize = input.size();
 
@@ -177,20 +200,16 @@ namespace palace
 
 		// Operator write
 		template <typename T>
-		void operator<< (T&& input)
+		ByteStream& operator<< (const T& input)
 		{
-			return write<T>(input);
+			write<T>(input);
+			return *this;
 		}
 
-		// Operator write for strings.
-		void operator<< (std::string input) noexcept
+		ByteStream& operator<< (const char* input)
 		{
-			return write(input);
-		}
-
-		void operator<< (const char* input)
-		{
-			return write(std::string(input));
+			write(std::string(input));
+			return *this;
 		}
 
 		void read(void* outbuf, size_t size)
@@ -211,8 +230,8 @@ namespace palace
 			return out;
 		}
 
-		// Read string
-		std::string read()
+		template<>
+		std::string read<std::string>()
 		{
 			std::string outp;
 
@@ -236,17 +255,11 @@ namespace palace
 			outp = read<T>();
 		}
 
-		// Operator for reading to strings
-		void operator>> (std::string& outp)
-		{
-			outp = read();
-		}
-
 		// Returns a pointer to memory pointed by an offset given by tellg()
 		//  Do not store the pointer address, since the object base offset can move
 		//  if the container is resized
 		template <typename T>
-		T* at(size_t offset)
+		T* raw_at(size_t offset)
 		{
 			return (T*)(pBuffer->data() + offset);
 		}
@@ -343,22 +356,17 @@ namespace palace
 			return pBuffer->data()[offset];
 		}
 
-		// Avoid using this function for dynamic data.
-		//  When the vector is resized, it may move in memory,
-		//  resulting in wrong memory pointers for all stored pointers.
-		// Functions calling this one should be avoided too
-		// Use tellg() and at() instead
-		template<typename T>
-		/*__declspec(deprecated)*/ T* ptr_to(uint32_t absolute_offset)
-		{
-			return (T*)(pBuffer->data() + absolute_offset);
-		}
-
 		// Avoid, for same reason as ptr_to, but not deprecated.
 		template<typename T>
-		T* ptr_here()
+		T* raw_ptr_here()
 		{
 			return (T*)_cur_addr();
+		}
+
+		template<typename T>
+		ByteStreamPtr<T> this_place()
+		{
+			return ByteStreamPtr<T>{ this, tellg() };
 		}
 
 		void ostream(std::ostream& ostream)

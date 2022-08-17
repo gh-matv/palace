@@ -6,8 +6,7 @@
 
 namespace palace
 {
-	template <typename T>
-	class CompressableByteStream : public ByteStream<T>
+	class CompressableByteStream : public ByteStream
 	{
 	public:
 

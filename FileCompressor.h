@@ -17,7 +17,7 @@ namespace palace
 			if (!ifs.is_open())
 				return false;
 
-			CompressableByteStream<uint16_t> cbs;
+			CompressableByteStream cbs;
 			cbs.resize(ifs.tellg());
 			ifs.seekg(0, std::ios::beg);
 
@@ -39,7 +39,7 @@ namespace palace
 			if (!ifs.is_open())
 				return false;
 
-			CompressableByteStream<uint16_t> cbs(ifs);
+			CompressableByteStream cbs(ifs);
 			ifs.close();
 
 			std::ofstream ofs(target, std::ios::binary);
