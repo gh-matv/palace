@@ -127,6 +127,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ByteStream.h" />
+    <ClInclude Include="ByteStream_Test.h" />
     <ClInclude Include="Chrono.h" />
     <ClInclude Include="code_checkers.h" />
     <ClInclude Include="CompressableByteStream.h" />

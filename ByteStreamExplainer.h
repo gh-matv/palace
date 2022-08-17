@@ -26,11 +26,12 @@ namespace palace
 		}
 	};
 
-	template<typename bytestream_stringsize_type = uint16_t>
+	typedef uint16_t bytestream_stringsize_type ;
+
 	class ByteStreamExplainer
 	{
 		std::string stream_name = "";
-		ByteStream<bytestream_stringsize_type>* m_BS;
+		ByteStream* m_BS;
 
 		std::map<size_t, ByteStreamInformation> m_Expl;
 		std::map<size_t, void*> m_Data;
@@ -48,13 +49,13 @@ namespace palace
 
 	public:
 
-		ByteStreamExplainer(const char* streamname, ByteStream<bytestream_stringsize_type>& bs)
+		ByteStreamExplainer(const char* streamname, ByteStream& bs)
 		{
 			m_BS = &bs;
 			stream_name = streamname;
 		}
 
-		ByteStreamExplainer(ByteStream<bytestream_stringsize_type>& bs)
+		ByteStreamExplainer(ByteStream& bs)
 		{
 			m_BS = &bs;
 		}
@@ -111,9 +112,9 @@ namespace palace
 			return explainPrevious();
 		}
 
-		ByteStream<bytestream_stringsize_type> export_bs()
+		ByteStream export_bs()
 		{
-			ByteStream<bytestream_stringsize_type> bs;
+			ByteStream bs;
 
 			// Write size of the explanation
 			bs.write<size_t>(m_Expl.size());
@@ -128,7 +129,7 @@ namespace palace
 			return bs;
 		}
 
-		void import_bs(ByteStream< bytestream_stringsize_type>& bs)
+		void import_bs(ByteStream& bs)
 		{
 			size_t counter = bs.read<size_t>();
 
